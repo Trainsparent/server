@@ -1,6 +1,6 @@
 function populateTable(){
-    populateTableImpl("https://huxley.apphb.com/all/big/from/vic/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
-    populateTableImpl("https://huxley.apphb.com/all/vic/from/big/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
+    populateTableImpl("https://huxley.apphb.com/all/clj/from/vic/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
+    populateTableImpl("https://huxley.apphb.com/all/vic/from/clj/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
 }
 
 function populateTableImpl(url) {
