@@ -1,6 +1,6 @@
 function populateTable() {
     var r = new XMLHttpRequest();
-    r.open("GET", "http://darwin.hacktrain.com/api/train/EUS/from/BHM?apiKey=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb&rows=10", true);
+    r.open("GET", "http://darwin.hacktrain.com/api/train/BTN/from/VIC?apiKey=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb&rows=10", true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
         var resp = JSON.parse(r.response);
@@ -14,7 +14,10 @@ function populateTable() {
             var header = document.createElement("h4");
             header.innerText = resp[i].origins[0].stationName + " to " + resp[i].destinations[0].stationName;
             var para = document.createElement("p");
-            para.innerText = resp[i].scheduledArrivalTime;
+            para.innerText = "Scheduled arrival time: "+resp[i].scheduledArrivalTime + " Estimated arrival time: "+resp[i].estimatedArrivalTime;
+            if (!(resp[i].scheduledArrivalTime===resp[i].estimatedArrivalTime)&&(!(resp[i].estimatedArrivalTime==="On time"))){
+                div.className = "bs-callout bs-callout-warning";
+            }
             var graphContainer = document.createElement("div");
 
             var graph = document.createElement("canvas");
