@@ -72,7 +72,8 @@
           <ul class="nav nav-sidebar">
             <li class="active"><a href="#">National <span class="sr-only">(current)</span></a></li>
             <li><a href="#">Your Station</a></li>
-            <li><select size="1" class="form-control" id="nearestStation" style="padding: 20;"></select></li>
+            <li><select size="1" class="form-control" id="nearestStation"></select></li>
+            <li><button type="button" class="btn btn-default fa fa-compass" id="useLocation" title="Use my location" onclick="getLocation()">Use my location</button></li>
             <li><a href="#">Your Journey</a></li>
             <li><a href="#">Export</a></li>
           </ul>
@@ -115,7 +116,7 @@
             </div>
           </div>
 
-          <h2 class="sub-header">Section title</h2>
+          <h2 class="sub-header">Upcoming Departures</h2>
           <div class="table-responsive" id ="timetable">
             
           </div>
