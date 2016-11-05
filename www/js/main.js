@@ -1,0 +1,4 @@
+function onloadPage(){
+    getLocation();
+    populateTable();
+}
