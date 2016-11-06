@@ -1,4 +1,6 @@
 function populateTable(station){
+    var statTitle = document.getElementById("station");
+    statTitle.innerText=" for "+station;
     populateTableImpl(station);
 }
 
@@ -13,17 +15,12 @@ function populateTableImpl(station1) {
         while (timetable.hasChildNodes()) {
             timetable.removeChild(timetable.lastChild);
         }
-        //getDelays(station1,resp[0].crs,resp[0].std);
+        //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
             var div = document.createElement("div");
             div.className = "bs-callout bs-callout-success";
             div.id = "callout-navbar-mobile-caveats";
-            var row = document.createElement("div");
-            row.className = "row";
-            var col1 = document.createElement("div");
-            col1.className = "col-sm-6 col-md-3";
-            var col2 = document.createElement("div");
-            col2.className = "col-sm-6 col-md-9";
+
             var header = document.createElement("h4");
             header.innerText = resp[i].origin[0].locationName + " to " + resp[i].destination[0].locationName;
             var para = document.createElement("p");
@@ -39,15 +36,13 @@ function populateTableImpl(station1) {
             var graphContainer = document.createElement("div");
 
             var graph = document.createElement("canvas");
-            graphContainer.style.width = "100%";
-            graphContainer.style.height = "400px";
-            col1.appendChild(header);
-            col1.appendChild(para);
+            graphContainer.style.width = "200px";
+            graphContainer.style.height = "100px";
+            div.appendChild(header);
+            div.appendChild(para);
             graphContainer.appendChild(graph);
-            col2.appendChild(graphContainer);
-            row.appendChild(col1);
-            row.appendChild(col2);
-            div.appendChild(row);
+            para.appendChild(graphContainer);
+
             timetable.appendChild(div);
             var myChart = new Chart(graph, {
                 type: 'line',
