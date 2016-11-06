@@ -1,16 +1,15 @@
 function populateTable(){
-    populateTableImpl("https://huxley.apphb.com/all/clj/from/vic/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
-    populateTableImpl("https://huxley.apphb.com/all/vic/from/clj/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb");
+    populateTableImpl("clj","vic");
 }
 
-function populateTableImpl(url) {
+function populateTableImpl(station1,station2) {
     var r = new XMLHttpRequest();
-    r.open("GET", url, true);
+    r.open("GET", "https://huxley.apphb.com/all/"+station1+"/from/"+station2+"/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb", true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
         var resp = JSON.parse(r.response).trainServices;
         var timetable = document.getElementById("timetable");
-
+        //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
             var div = document.createElement("div");
             div.className = "bs-callout bs-callout-success";
@@ -21,7 +20,12 @@ function populateTableImpl(url) {
             var para = document.createElement("p");
             para.innerText = "Scheduled arrival time: "+resp[i].sta + " Estimated arrival time: "+resp[i].eta;
             if (!(resp[i].sta===resp[i].eta)&&(!(resp[i].eta==="On time"))){
-                div.className = "bs-callout bs-callout-warning";
+                if (resp[i].eta==="Cancelled"){
+                    div.className = "bs-callout bs-callout-danger";
+                } else {
+                    div.className = "bs-callout bs-callout-warning";
+                }
+                
             }
             var graphContainer = document.createElement("div");
 
