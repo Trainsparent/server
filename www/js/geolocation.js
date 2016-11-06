@@ -44,6 +44,7 @@ function showPosition(position) {
                 opt.textContent = data.result[i].stationname + " (" + data.result[i].crscode + ")";
                 dropdown.appendChild(opt);
             }
+            populateTable(data.result[0].crscode);
         });
 
 }

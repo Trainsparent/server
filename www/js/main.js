@@ -1,4 +1,4 @@
 function onloadPage(){
     getInitialLocation();
-    populateTable();
+    populateTable("vic");
 }

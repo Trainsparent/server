@@ -1,14 +1,20 @@
-function populateTable(){
-    populateTableImpl("clj","vic");
+function populateTable(station){
+    var statTitle = document.getElementById("station");
+    statTitle.innerText=" for "+station;
+    populateTableImpl(station);
 }
 
-function populateTableImpl(station1,station2) {
+function populateTableImpl(station1) {
+    
     var r = new XMLHttpRequest();
-    r.open("GET", "https://huxley.apphb.com/all/"+station1+"/from/"+station2+"/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb", true);
+    r.open("GET", "https://huxley.apphb.com/all/"+station1+"/10?accessToken=2eddeea6-ec45-408b-99cb-8ef5b1d3d6cb", true);
     r.onreadystatechange = function () {
         if (r.readyState != 4 || r.status != 200) return;
         var resp = JSON.parse(r.response).trainServices;
         var timetable = document.getElementById("timetable");
+        while (timetable.hasChildNodes()) {
+            timetable.removeChild(timetable.lastChild);
+        }
         //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
             var div = document.createElement("div");
