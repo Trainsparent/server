@@ -1,3 +1,10 @@
+function gethist(loc_from, loc_to, on_date, to_date) {
+    var posting = $.get('http://8aef09f8.ngrok.io/hist', {'from_loc':loc_from,'to_loc':loc_to,'on_date':on_date,'to_date':to_date});
+    posting.done(function( data ) {
+        console.log(data)
+    });
+}
+
 function getDelays(from, to, time) {
     var date = new Date('2000', '01', '01', time.substring(0, 2), time.substring(2, 4), '00');
     var metricsURL = "https://hsp-prod.rockshore.net/api/v1/servicemetrics";
@@ -6,19 +13,7 @@ function getDelays(from, to, time) {
     var earlierDateString = pad(earlierDate.getHours, 2) + pad(earlierDate.getMinutes, 2);
     var laterDateString = pad(laterDate.getHours, 2) + pad(laterDate.getMinutes, 2);
     var metricsJSON = { "from_loc": from, "to_loc": to, "from_time": earlierDateString, "to_time": laterDateString, "from_date": "2015-11-01", "to_date": "2016-11-01", "days": "WEEKDAY" };
-
-    var xmlhttp = new XMLHttpRequest();
-    xmlhttp.open("POST", metricsURL, true);
-    xmlhttp.setRequestHeader("Content-type", "application/json");
-    xmlhttp.setRequestHeader("Authorization", "Basic YmVuLm94bGV5QGdtYWlsLmNvbTo2YU1eT2sjbldWITYxcXJD");
-    xmlhttp.onreadystatechange = function () { //Call a function when the state changes.
-        if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-
-            var json = JSON.parse(xmlhttp.responseText);
-            getDelayTimes(from, json);
-        }
-    };
-    xmlhttp.send(metricsJSON);
+    gethist(from,to,"2015-11-01 "+earlierDateString,"2016-11-01 "+laterDateString);
 
 }
 

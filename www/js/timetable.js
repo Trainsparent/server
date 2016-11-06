@@ -13,6 +13,7 @@ function populateTableImpl(station1) {
         while (timetable.hasChildNodes()) {
             timetable.removeChild(timetable.lastChild);
         }
+        getDelays(station1,resp[0].destination[0].crs,resp[0].std);
         //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
             var div = document.createElement("div");
@@ -25,11 +26,16 @@ function populateTableImpl(station1) {
             var col2 = document.createElement("div");
             col2.className = "col-sm-6 col-md-9";
             var header = document.createElement("h4");
-            header.innerText = resp[i].origin[0].locationName + " to " + resp[i].destination[0].locationName;
+            if (resp[i].std!==null){
+                header.innerText = "The "+resp[i].std+" from "+resp[i].origin[0].locationName + " to " + resp[i].destination[0].locationName;
+            } else {
+                header.innerText = resp[i].origin[0].locationName + " to " + resp[i].destination[0].locationName;
+            }
+            
             var para = document.createElement("p");
-            para.innerText = "Scheduled arrival time: "+resp[i].sta + " Estimated arrival time: "+resp[i].eta;
-            if (!(resp[i].sta===resp[i].eta)&&(!(resp[i].eta==="On time"))){
-                if (resp[i].eta==="Cancelled"){
+            para.innerText = "Scheduled departure time: "+resp[i].std + " Estimated departure time: "+resp[i].etd;
+            if (!(resp[i].std===resp[i].etd)&&(!(resp[i].etd==="On time"))){
+                if (resp[i].etd==="Cancelled"||resp[i].etd==="Delayed"){
                     div.className = "bs-callout bs-callout-danger";
                 } else {
                     div.className = "bs-callout bs-callout-warning";
