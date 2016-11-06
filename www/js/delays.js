@@ -1,17 +1,30 @@
 function gethist(loc_from, loc_to, on_date, to_date) {
     var posting = $.get('http://8aef09f8.ngrok.io/hist', {'from_loc':loc_from,'to_loc':loc_to,'on_date':on_date,'to_date':to_date});
+    
+    var delays = 0;
+    var numDelays = 0;
     posting.done(function( data ) {
-        console.log(data)
-    });
+        for (var i = 0; i < data.map.length; i ++){
+            if (data.map[i]===loc_from){
+                for (var j = 0; j < data.delta.length; j++){
+                    delays += data.delta[i];
+                    numDelays++;
+                    document.getElementById("graphContainer").innerText = "Average delay: "+(delays/numDelays);
+                }
+                
+            }
+        }
+});
+
 }
 
 function getDelays(from, to, time) {
-    var date = new Date('2000', '01', '01', time.substring(0, 2), time.substring(2, 4), '00');
+    var date = new Date(2011, 1, 1, parseInt(time.substring(0, 2)), parseInt(time.substring(3, 5)), 0);
     var metricsURL = "https://hsp-prod.rockshore.net/api/v1/servicemetrics";
     var earlierDate = new Date(date.getTime() - 30 * 60000);
     var laterDate = new Date(date.getTime() - 30 * 60000);
-    var earlierDateString = pad(earlierDate.getHours, 2) + pad(earlierDate.getMinutes, 2);
-    var laterDateString = pad(laterDate.getHours, 2) + pad(laterDate.getMinutes, 2);
+    var earlierDateString = pad(earlierDate.getHours, 2) +":"+ pad(earlierDate.getMinutes, 2);
+    var laterDateString = pad(laterDate.getHours, 2) +":"+ pad(laterDate.getMinutes, 2);
     var metricsJSON = { "from_loc": from, "to_loc": to, "from_time": earlierDateString, "to_time": laterDateString, "from_date": "2015-11-01", "to_date": "2016-11-01", "days": "WEEKDAY" };
     gethist(from,to,"2015-11-01 "+earlierDateString,"2016-11-01 "+laterDateString);
 

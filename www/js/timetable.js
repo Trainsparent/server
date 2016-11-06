@@ -13,9 +13,13 @@ function populateTableImpl(station1) {
         while (timetable.hasChildNodes()) {
             timetable.removeChild(timetable.lastChild);
         }
-        getDelays(station1,resp[0].destination[0].crs,resp[0].std);
+        
         //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
+            if (resp[i].std!==null){
+                getDelays(station1,resp[i].destination[0].crs,resp[i].std);
+            }
+            
             var div = document.createElement("div");
             div.className = "bs-callout bs-callout-success";
             div.id = "callout-navbar-mobile-caveats";
@@ -43,6 +47,7 @@ function populateTableImpl(station1) {
                 
             }
             var graphContainer = document.createElement("div");
+            graphContainer.id = "graphContainer";
 
             var graph = document.createElement("canvas");
             graphContainer.style.width = "200px";
@@ -76,6 +81,7 @@ function populateTableImpl(station1) {
                 }
             });
         }
+        
     };
     r.send();
 }
