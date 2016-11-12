@@ -13,11 +13,12 @@ function populateTableImpl(station1) {
         while (timetable.hasChildNodes()) {
             timetable.removeChild(timetable.lastChild);
         }
-        
+        var avgDelay = 0;
+        var delayedTrains = 0;
         //getDelays(station1,station2,resp[0].sta);
         for (var i = 0; i < resp.length; i++) {
             if (resp[i].std!==null){
-                getDelays(station1,resp[i].destination[0].crs,resp[i].std);
+                //getDelays(station1,resp[i].destination[0].crs,resp[i].std);
             }
             
             var div = document.createElement("div");
@@ -46,6 +47,8 @@ function populateTableImpl(station1) {
                     warningContainer.className = "fa-stack fa-lg fa-4x";
                     warningContainer.style.color = "#6d1500";
                     var circle = document.createElement("i");
+                    avgDelay += 20;
+                    delayedTrains++;
                     textDiv.innerHTML = "<b>"+Math.round(Math.random()*100)+" min delay likely</b>"
                     circle.className = "fa fa-circle fa-stack-2x";
                     trainwarn = document.createElement("i");
@@ -59,8 +62,10 @@ function populateTableImpl(station1) {
                     circle = document.createElement("i");
                     circle.className = "fa fa-circle fa-stack-2x";
                     var trainwarn = document.createElement("i");
-                    
-                    textDiv.innerHTML = "<b>"+Math.round(Math.random()*10)+" min delay likely</b>"
+                    var actualDelay = getDelayFromStrings(resp[i].std,resp[i].etd);
+                    avgDelay += actualDelay;
+                    delayedTrains++;
+                    textDiv.innerHTML = "<b>"+(actualDelay+Math.round(Math.random()*10))+" min delay likely</b>"
                     trainwarn.className = "fa fa-train fa-stack-1x fa-inverse";
                     warningContainer.appendChild(circle);
                     warningContainer.appendChild(trainwarn);
@@ -68,15 +73,32 @@ function populateTableImpl(station1) {
                 }
                 
             } else {
-                warningContainer.className = "fa-stack fa-lg fa-4x";
-                warningContainer.style.color = "#55ff55";
-                var circle = document.createElement("i");
-                circle.className = "fa fa-circle fa-stack-2x";
-                var trainwarn = document.createElement("i");
-                textDiv.innerText = "No Delays";
-                trainwarn.className = "fa fa-train fa-stack-1x fa-inverse";
-                warningContainer.appendChild(circle);
-                warningContainer.appendChild(trainwarn);
+                if (avgDelay!==0){
+                    div.className = "bs-callout bs-callout-warning";
+                    warningContainer.className = "fa-stack fa-lg fa-4x";
+                    warningContainer.style.color = "#ffc677";
+                    circle = document.createElement("i");
+                    circle.className = "fa fa-circle fa-stack-2x";
+                    var trainwarn = document.createElement("i");
+                    var thisDelay = Math.round(avgDelay/delayedTrains);
+                    avgDelay -= thisDelay+1;
+
+                    avgDelay = Math.max(0,avgDelay);
+                    textDiv.innerHTML = "<b>"+thisDelay+" min delay likely</b>"
+                    trainwarn.className = "fa fa-train fa-stack-1x fa-inverse";
+                    warningContainer.appendChild(circle);
+                    warningContainer.appendChild(trainwarn);
+                } else {
+                    warningContainer.className = "fa-stack fa-lg fa-4x";
+                    warningContainer.style.color = "#55ff55";
+                    var circle = document.createElement("i");
+                    circle.className = "fa fa-circle fa-stack-2x";
+                    var trainwarn = document.createElement("i");
+                    textDiv.innerText = "No Delays";
+                    trainwarn.className = "fa fa-train fa-stack-1x fa-inverse";
+                    warningContainer.appendChild(circle);
+                    warningContainer.appendChild(trainwarn);
+                }
             }
             var graphContainer = document.createElement("div");
             graphContainer.id = "graphContainer";
@@ -117,4 +139,10 @@ function populateTableImpl(station1) {
         
     };
     r.send();
+}
+
+function getDelayFromStrings(scheduled, estimated){
+    var actual_td = new Date('2000', '01', '01', estimated.substring(0, 2), estimated.substring(3, 5), '00');
+    var gbtt_ptd = new Date('2000', '01', '01', scheduled.substring(0, 2), scheduled.substring(3, 5), '00');
+    return (actual_td.getTime() - gbtt_ptd.getTime())/(60000);
 }
